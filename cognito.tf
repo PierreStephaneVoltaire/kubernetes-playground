@@ -10,8 +10,8 @@ resource "aws_cognito_user_pool_client" "auth" {
   user_pool_id        = aws_cognito_user_pool.auth.id
   generate_secret     = true
   explicit_auth_flows = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
-  callback_urls       = ["https://argocd.${var.domain_name}/auth/callback"]
-  logout_urls         = ["https://argocd.${var.domain_name}/auth/logout"]
+  callback_urls       = ["${local.argo_domain}/auth/callback"]
+  logout_urls         = ["${local.argo_domain}/auth/logout"]
 
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
@@ -35,38 +35,10 @@ resource "aws_cognito_user_group" "argo" {
   role_arn     = aws_iam_role.argo_authenticated_role.arn
 }
 
-data "aws_iam_policy_document" "group_role" {
-  statement {
-    effect = "Allow"
 
-    principals {
-      type        = "Federated"
-      identifiers = ["cognito-identity.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRoleWithWebIdentity"]
-
-    condition {
-      test     = "StringEquals"
-      variable = "cognito-identity.amazonaws.com:aud"
-      values   = ["us-east-1:12345678-dead-beef-cafe-123456790ab"]
-    }
-
-    condition {
-      test     = "ForAnyValue:StringLike"
-      variable = "cognito-identity.amazonaws.com:amr"
-      values   = ["authenticated"]
-    }
-  }
-}
 
 resource "aws_iam_role" "argo_authenticated_role" {
-  name               = "argo_authenticated_role"
-  assume_role_policy = data.aws_iam_policy_document.group_role.json
-}
-
-resource "aws_iam_role" "authenticated_role" {
-  name = "authenticated-user-role"
+  name = "argo_authenticated_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

@@ -1,10 +1,10 @@
+locals {
+  argo_domain = "https://argocd.${var.domain_name}"
+}
 resource "aws_acm_certificate" "argocd_cert" {
   domain_name       = "argocd.${var.domain_name}"
   validation_method = "DNS"
 
-  tags = {
-    Name = "argocd-cert"
-  }
 }
 
 resource "aws_route53_record" "argocd_cert_validation" {
