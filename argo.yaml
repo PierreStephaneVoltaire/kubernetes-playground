@@ -1,4 +1,6 @@
 configs:
+  cm:
+    admin.enabled: false
   rbac:
     create: true
     policy.default: ''
