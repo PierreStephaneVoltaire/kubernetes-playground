@@ -1,6 +1,26 @@
+configs:
+  rbac:
+    create: true
+    policy.default: ''
+    policy.csv: |
+      g, argocd-readonly, role:readonly
+      g, argocd-admin, role:admin
+  scopes: '[groups]'
 server:
+  config:
+    oidc.config: |
+      name: cognito
+      issuer: https://${cognito_endpoint} 
+      clientID: ${client_id}  
+      clientSecret: ${client_secret}
+      requestedScopes: ["openid", "phone", "email"]
+      redirectUrI: https://${domain}/api/dex/callback"
+      requestedIDTokenClaims: {"groups": {"essential": true}}
+      insecure: false
+    url: https://${domain}
   ingress:
-    hostname: ${domain}
+    hosts:
+      - ${domain}
     enabled: true
     controller: aws
     annotations:

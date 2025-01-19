@@ -39,8 +39,7 @@ variable "cluster_version" {
   type = string
 }
 variable "contact" {
-  type      = string
-  sensitive = true
+  type = string
 }
 variable "eks_managed_node_groups" {
   type = map(object({
@@ -53,10 +52,9 @@ variable "eks_managed_node_groups" {
 }
 
 variable "allowed_ips" {
-  type = list(string)
+  type      = list(string)
   sensitive = true
 }
 variable "argo_users" {
-  type = map(object({username=string,email=string}))
-  sensitive = true
+  type = map(object({ email = string }))
 }

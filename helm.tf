@@ -51,11 +51,11 @@ module "eks_blueprints_addons" {
       value = module.vpc.vpc_id
     }]
   }
-  enable_cluster_autoscaler = true
-  enable_argocd             = true
-  #  enable_argo_rollouts                = true
-  #  enable_argo_events                  = true
-  #  enable_argo_workflows               = true
+  enable_cluster_autoscaler           = true
+  enable_argocd                       = true
+  enable_argo_rollouts                = true
+  enable_argo_events                  = true
+  enable_argo_workflows               = true
   enable_aws_load_balancer_controller = true
   aws_load_balancer_controller = {
     set = [{
@@ -81,9 +81,13 @@ module "eks_blueprints_addons" {
   argocd = {
     create_namespace = true
     values = [templatefile("${path.module}/argo.yaml",
-      { domain = aws_acm_certificate.argocd_cert.domain_name,
-        cert   = aws_acm_certificate.argocd_cert.arn,
-    subnets = join(",", module.vpc.public_subnets) })]
+      { domain           = aws_acm_certificate.argocd_cert.domain_name,
+        cert             = aws_acm_certificate.argocd_cert.arn,
+        subnets          = join(",", module.vpc.public_subnets),
+        cognito_endpoint = aws_cognito_user_pool.auth.endpoint,
+        client_id        = aws_cognito_user_pool_client.auth.id,
+        client_secret    = aws_cognito_user_pool_client.auth.client_secret,
+    })]
 
   }
 
