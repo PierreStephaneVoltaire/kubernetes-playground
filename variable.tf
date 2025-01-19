@@ -4,13 +4,6 @@ variable "app_name" {
 }
 variable "tags" {
   type = map(string)
-  default = {
-    Owner       = "psvoltaire"
-    Environment = "production"
-    Project     = "psvoltaire-eks-infra"
-    Role        = "eks cluster"
-
-  }
 }
 variable "domain_name" {
   type = string
