@@ -1,5 +1,5 @@
 locals {
-  domain = replace("argo-${var.domain_name}", "-", "")
+  domain = replace("argo-${var.domain_name}", ".", "")
 }
 
 resource "aws_cognito_user_pool_domain" "this" {
