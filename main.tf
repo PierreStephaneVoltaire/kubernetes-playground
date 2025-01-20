@@ -28,11 +28,11 @@ module "cost_management" {
   tags     = var.tags
 }
 module "security" {
-  source = "./security"
+  source      = "./security"
   allowed_ips = var.allowed_ips
-  app_name = var.app_name
+  app_name    = var.app_name
   argo_domain = "https://${local.argo_domain}"
-  argo_users = var.argo_users
+  argo_users  = var.argo_users
   domain_name = var.domain_name
-  tags = var.tags
+  tags        = var.tags
 }
