@@ -84,9 +84,9 @@ module "eks_blueprints_addons" {
       { domain           = aws_acm_certificate.argocd_cert.domain_name,
         cert             = aws_acm_certificate.argocd_cert.arn,
         subnets          = join(",", module.vpc.public_subnets),
-        cognito_endpoint = aws_cognito_user_pool.auth.endpoint,
-        client_id        = aws_cognito_user_pool_client.auth.id,
-        client_secret    = aws_cognito_user_pool_client.auth.client_secret,
+        cognito_endpoint =  module.security.cognito_endpoint
+        client_id        = module.security.argo_app_client_id
+        client_secret    = module.security.argo_app_client_secret
     })]
 
   }

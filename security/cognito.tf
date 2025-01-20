@@ -5,13 +5,14 @@ resource "aws_cognito_user_pool" "auth" {
   auto_verified_attributes = ["email"]
 
 }
+
 resource "aws_cognito_user_pool_client" "auth" {
   name                = "${var.app_name}-client"
   user_pool_id        = aws_cognito_user_pool.auth.id
   generate_secret     = true
   explicit_auth_flows = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
-  callback_urls       = ["${local.argo_domain}/auth/callback"]
-  logout_urls         = ["${local.argo_domain}/auth/logout"]
+  callback_urls       = ["${var.argo_domain}/auth/callback"]
+  logout_urls         = ["${var.argo_domain}/auth/logout"]
 
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]

@@ -1,8 +1,8 @@
 locals {
-  argo_domain = "https://argocd.${var.domain_name}"
+  argo_domain = "argocd.${var.domain_name}"
 }
 resource "aws_acm_certificate" "argocd_cert" {
-  domain_name       = "argocd.${var.domain_name}"
+  domain_name       = local.argo_domain
   validation_method = "DNS"
 
 }
@@ -49,7 +49,7 @@ data "aws_lb" "argo" {
 }
 resource "aws_route53_record" "argocd_alb" {
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = "argocd.${var.domain_name}"
+  name    = local.argo_domain
   type    = "A"
 
   alias {
