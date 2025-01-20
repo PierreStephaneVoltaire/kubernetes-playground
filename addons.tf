@@ -81,8 +81,8 @@ module "eks_blueprints_addons" {
   argocd = {
     create_namespace = true
     values = [templatefile("${path.module}/argo.yaml",
-      { domain           = aws_acm_certificate.argocd_cert.domain_name,
-        cert             = aws_acm_certificate.argocd_cert.arn,
+      { domain           = local.argo_domain,
+        cert             = module.network.wildcard_cert,
         subnets          = join(",", module.vpc.public_subnets),
         cognito_endpoint = module.security.cognito_endpoint
         client_id        = module.security.argo_app_client_id

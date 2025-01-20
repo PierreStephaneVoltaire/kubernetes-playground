@@ -34,3 +34,7 @@ provider "kubectl" {
   load_config_file       = false
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 }
+
+provider "vault" {
+  address = ""
+}

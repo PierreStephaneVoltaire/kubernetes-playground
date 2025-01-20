@@ -9,6 +9,12 @@ terraform {
       version = "> 1.16.0"
 
     }
+
+    vault = {
+      source  = "hashicorp/vault"
+      version = "4.6.0"
+
+    }
   }
   required_version = ">= 1.3.0"
 }
@@ -28,11 +34,19 @@ module "cost_management" {
   tags     = var.tags
 }
 module "security" {
-  source      = "./security"
-  allowed_ips = var.allowed_ips
-  app_name    = var.app_name
-  argo_domain = "https://${local.argo_domain}"
-  argo_users  = var.argo_users
+  source                = "./security"
+  allowed_ips           = var.allowed_ips
+  app_name              = var.app_name
+  argo_domain           = "https://${local.argo_domain}"
+  argo_users            = var.argo_users
+  domain_name           = var.domain_name
+  tags                  = var.tags
+  vault_version         = var.vault_version
+  alb_cert_arn          = module.network.wildcard_cert
+  public_subnets_string = join(",", module.vpc.public_subnets)
+}
+
+module "network" {
+  source      = "./networking"
   domain_name = var.domain_name
-  tags        = var.tags
 }

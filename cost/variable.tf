@@ -1,5 +1,5 @@
 variable "app_name" {
-  type    = string
+  type = string
 }
 variable "tags" {
   type = map(string)

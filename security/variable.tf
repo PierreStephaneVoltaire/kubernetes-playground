@@ -1,5 +1,5 @@
 variable "app_name" {
-  type    = string
+  type = string
 }
 variable "tags" {
   type = map(string)
@@ -16,4 +16,13 @@ variable "allowed_ips" {
 }
 variable "argo_users" {
   type = map(object({ email = string }))
+}
+variable "vault_version" {
+  type = string
+}
+variable "public_subnets_string" {
+  type = string
+}
+variable "alb_cert_arn" {
+  type = string
 }

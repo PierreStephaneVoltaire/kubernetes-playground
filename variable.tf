@@ -51,3 +51,6 @@ variable "allowed_ips" {
 variable "argo_users" {
   type = map(object({ email = string }))
 }
+variable "vault_version" {
+  type = string
+}
