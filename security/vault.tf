@@ -24,7 +24,7 @@ resource "helm_release" "vault" {
         seal "awskms" {
           region     = "${data.aws_region.current.name}"
           kms_key_id = "${aws_kms_key.vault_kms_key.arn}"
-          endpoint = "kms.<KMS_KEY_REGION>.amazonaws.com"
+          endpoint = "kms.${data.aws_region.current.name}.amazonaws.com"
         }
         ui = true
         disable_mlock = true
