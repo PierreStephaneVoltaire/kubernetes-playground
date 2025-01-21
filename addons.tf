@@ -1,3 +1,13 @@
+module "irsa-ebs-csi" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version = "~> 5.39.0"
+
+  create_role                   = true
+  role_name                     = "AmazonEKSTFEBSCSIRole-${module.eks.cluster_name}"
+  provider_url                  = module.eks.oidc_provider
+  role_policy_arns              = [data.aws_iam_policy.AmazonEBSCSIDriverPolicy.arn]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+}
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
   version = "~> 1.0"
@@ -11,9 +21,8 @@ module "eks_blueprints_addons" {
     aws-ebs-csi-driver = {
       resolve_conflicts = "OVERWRITE"
       most_recent       = true
-      role_policies = {
-        aws_load_balancer = data.aws_iam_policy.AmazonEBSCSIDriverPolicy.arn
-      }
+      service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
+
     }
 
     coredns = {
@@ -93,4 +102,24 @@ module "eks_blueprints_addons" {
 
 }
 
+resource "kubernetes_storage_class" "gp3" {
+  depends_on             = [module.eks_blueprints_addons.eks_addons]
+  volume_binding_mode    = "WaitForFirstConsumer"
+  reclaim_policy         = "Delete"
+  allow_volume_expansion = true
+  metadata {
+    name = "gp3"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+
+  parameters = {
+    type   = "gp3"
+    throughput= 125
+    encrypted= true
+    fsType = "ext4"
+  }
+  storage_provisioner = "ebs.csi.aws.com"
+}
 

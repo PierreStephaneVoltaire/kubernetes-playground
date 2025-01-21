@@ -26,3 +26,9 @@ variable "public_subnets_string" {
 variable "alb_cert_arn" {
   type = string
 }
+variable "eks_issuer" {
+  type = string
+}
+variable "oidc_provider" {
+  type = string
+}

@@ -23,3 +23,6 @@ data "aws_iam_policy" "AmazonEKSServicePolicy" {
 data "aws_iam_policy" "AmazonEKSClusterPolicy" {
   name = "AmazonEKSServicePolicy"
 }
+data "aws_iam_policy" "AmazonEKSVPCResourceController" {
+  name = "AmazonEKSVPCResourceController"
+}

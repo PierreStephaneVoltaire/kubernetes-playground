@@ -44,6 +44,8 @@ module "security" {
   vault_version         = var.vault_version
   alb_cert_arn          = module.network.wildcard_cert
   public_subnets_string = join(",", module.vpc.public_subnets)
+  eks_issuer            = module.eks.oidc_provider
+  oidc_provider         = module.eks.oidc_provider_arn
 }
 
 module "network" {
