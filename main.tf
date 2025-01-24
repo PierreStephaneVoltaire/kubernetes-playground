@@ -56,6 +56,7 @@ module "jenkins" {
   client_secret     = module.security.jenkins__app_client_secret
   cognito_uri       = module.security.cognito_endpoint
   oidc_provider_arn = module.eks.oidc_provider_arn
+  jenkins_git_values = var.jenkins_git_values
 }
 
 
