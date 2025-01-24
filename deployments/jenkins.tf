@@ -38,10 +38,10 @@ resource "kubernetes_service_account" "jenkins" {
 resource "local_file" "vaules" {
   filename = "${path.module}/values.yaml"
   content  = <<EOT
-  controller:
-    serviceAccount:
-     create: false
-     name: ${kubernetes_service_account.jenkins.metadata[0].name}
+controller:
+  serviceAccount:
+   create: false
+   name: ${kubernetes_service_account.jenkins.metadata[0].name}
     EOT
 }
 resource "kubernetes_secret" "jenkins_auth" {
