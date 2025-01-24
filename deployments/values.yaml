@@ -1,4 +1,6 @@
-controller:
-  serviceAccount:
-   create: false
-   name: jenkins-service-account
+rbac:
+  create: true
+  readSecrets: true
+serviceAccount:
+  create: false
+  name: jenkins-service-account
