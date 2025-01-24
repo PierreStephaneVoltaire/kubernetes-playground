@@ -1,0 +1,6 @@
+"  controller:\r\n    serviceAccount:\r\n     create: false\r\n     name: jenkins-service-account\r\n
+  \   env:\r\n      - name: JENKINS_OAUTH_CLIENT_ID\r\n      value: \"3kfe2c13gpjf4vn93vn8fddnte\"\r\n
+  \     - name: JENKINS_OAUTH_CLIENT_SECRET\r\n      value: \"1gnotht97j0f25d9np7tgost92i44u6ka3r08941647tpm2mlej0\"\r\n
+  \     - name: JENKINS_OAUTH_TOKEN_URI\r\n      value: \"https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_V04c3MT4k/oauth2/token\"\r\n
+  \     - name: JENKINS_OAUTH_AUTHORIZATION_URI\r\n      value: \"https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_V04c3MT4k/oauth2/authorize\"\r\n
+  \     - name: JENKINS_OAUTH_USER_INFO_URI\r\n      value: \"https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_V04c3MT4k/oauth2/userInfo\"\r\n"

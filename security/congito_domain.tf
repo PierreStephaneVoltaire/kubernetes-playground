@@ -1,5 +1,6 @@
 locals {
   domain = replace(var.domain_name, ".", "")
+
 }
 
 resource "aws_cognito_user_pool_domain" "this" {

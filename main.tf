@@ -38,7 +38,7 @@ module "security" {
   allowed_ips           = var.allowed_ips
   app_name              = var.app_name
   argo_domain           = "https://${local.argo_domain}"
-  argo_users            = var.argo_users
+  users                 = var.users
   domain_name           = var.domain_name
   tags                  = var.tags
   vault_version         = var.vault_version
@@ -46,7 +46,18 @@ module "security" {
   public_subnets_string = join(",", module.vpc.public_subnets)
   eks_issuer            = module.eks.oidc_provider
   oidc_provider         = module.eks.oidc_provider_arn
+  jenkins_domain        = "jenkins.${var.domain_name}"
 }
+module "jenkins" {
+  source = "./deployments"
+
+
+  client_id         = module.security.jenkins_app_client_id
+  client_secret     = module.security.jenkins__app_client_secret
+  cognito_uri       = module.security.cognito_endpoint
+  oidc_provider_arn = module.eks.oidc_provider_arn
+}
+
 
 module "network" {
   source      = "./networking"

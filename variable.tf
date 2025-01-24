@@ -48,9 +48,13 @@ variable "allowed_ips" {
   type      = list(string)
   sensitive = true
 }
-variable "argo_users" {
+variable "users" {
   type = map(object({ email = string }))
 }
+
 variable "vault_version" {
+  type = string
+}
+variable "jenkins_git_values" {
   type = string
 }

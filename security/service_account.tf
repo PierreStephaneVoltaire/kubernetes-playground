@@ -10,7 +10,7 @@ resource "kubernetes_service_account" "vault" {
     name      = "vault-sa"
     namespace = kubernetes_namespace.vault.metadata[0].name
     annotations = {
-      "eks.amazonaws.com/role-arn" = aws_iam_role.vault_role.arn
+      "eks.amazonaws.com/role-arn"     = aws_iam_role.vault_role.arn
       "meta.helm.sh/release-namespace" = kubernetes_namespace.vault.metadata[0].name
     }
 
@@ -21,7 +21,7 @@ resource "kubernetes_service_account" "vault" {
 }
 
 resource "aws_iam_role" "vault_role" {
-  name               = "${var.app_name}-vault-role"
+  name = "${var.app_name}-vault-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -29,11 +29,11 @@ resource "aws_iam_role" "vault_role" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Effect = "Allow"
         Principal = {
-          "Federated": var.oidc_provider
+          "Federated" : var.oidc_provider
         }
         Condition = {
           StringEquals = {
-            "${var.eks_issuer}:sub" = "system:serviceaccount:${ kubernetes_namespace.vault.metadata[0].name}:vault-sa"
+            "${var.eks_issuer}:sub" = "system:serviceaccount:${kubernetes_namespace.vault.metadata[0].name}:vault-sa"
           }
         }
       }

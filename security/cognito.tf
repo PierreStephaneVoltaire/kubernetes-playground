@@ -59,7 +59,7 @@ resource "aws_iam_role" "argo_authenticated_role" {
   })
 }
 resource "random_password" "argo_password" {
-  for_each    = var.argo_users
+  for_each    = var.users
   length      = 12
   min_special = 4
   special     = true
@@ -67,8 +67,8 @@ resource "random_password" "argo_password" {
   min_numeric = 2
 }
 
-resource "aws_cognito_user" "argo_user" {
-  for_each       = var.argo_users
+resource "aws_cognito_user" "user" {
+  for_each       = var.users
   user_pool_id   = aws_cognito_user_pool.auth.id
   username       = each.value.email
   password       = random_password.argo_password[each.key].result
@@ -80,16 +80,16 @@ resource "aws_cognito_user" "argo_user" {
 }
 
 resource "aws_cognito_user_in_group" "argo_user_groups" {
-  for_each     = aws_cognito_user.argo_user
+  for_each     = aws_cognito_user.user
   user_pool_id = aws_cognito_user_pool.auth.id
   group_name   = aws_cognito_user_group.argo.name
   username     = each.value.username
 }
 
-resource "kubernetes_secret" "argo_user_credentials" {
-  for_each = aws_cognito_user.argo_user
+resource "kubernetes_secret" "user_credentials" {
+  for_each = aws_cognito_user.user
   metadata {
-    name      = "argocd-credentials-${each.key}"
+    name      = "credentials-${each.key}"
     namespace = "argocd"
   }
 

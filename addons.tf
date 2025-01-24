@@ -19,8 +19,8 @@ module "eks_blueprints_addons" {
 
   eks_addons = {
     aws-ebs-csi-driver = {
-      resolve_conflicts = "OVERWRITE"
-      most_recent       = true
+      resolve_conflicts        = "OVERWRITE"
+      most_recent              = true
       service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
 
     }
@@ -115,10 +115,10 @@ resource "kubernetes_storage_class" "gp3" {
   }
 
   parameters = {
-    type   = "gp3"
-    throughput= 125
-    encrypted= true
-    fsType = "ext4"
+    type       = "gp3"
+    throughput = 125
+    encrypted  = true
+    fsType     = "ext4"
   }
   storage_provisioner = "ebs.csi.aws.com"
 }

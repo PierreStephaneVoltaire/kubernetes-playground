@@ -7,6 +7,9 @@ variable "tags" {
 variable "argo_domain" {
   type = string
 }
+variable "jenkins_domain" {
+  type = string
+}
 variable "domain_name" {
   type = string
 }
@@ -14,7 +17,7 @@ variable "allowed_ips" {
   type      = list(string)
   sensitive = true
 }
-variable "argo_users" {
+variable "users" {
   type = map(object({ email = string }))
 }
 variable "vault_version" {
