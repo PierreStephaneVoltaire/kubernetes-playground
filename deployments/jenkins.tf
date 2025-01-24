@@ -37,29 +37,33 @@ resource "kubernetes_service_account" "jenkins" {
 
 resource "local_file" "vaules" {
   filename = "${path.module}/values.yaml"
-  content = yamlencode(<<EOT
+  content  = <<EOT
   controller:
     serviceAccount:
      create: false
      name: ${kubernetes_service_account.jenkins.metadata[0].name}
-    env:
-      - name: JENKINS_OAUTH_CLIENT_ID
-      value: "${var.client_id}"
-      - name: JENKINS_OAUTH_CLIENT_SECRET
-      value: "${var.client_secret}"
-      - name: JENKINS_OAUTH_TOKEN_URI
-      value: "https://${var.cognito_uri}/oauth2/token"
-      - name: JENKINS_OAUTH_AUTHORIZATION_URI
-      value: "https://${var.cognito_uri}/oauth2/authorize"
-      - name: JENKINS_OAUTH_USER_INFO_URI
-      value: "https://${var.cognito_uri}/oauth2/userInfo"
     EOT
-  )
+}
+resource "kubernetes_secret" "jenkins_auth" {
+  metadata {
+    name      = "jenkinsoauth"
+    namespace = kubernetes_namespace.jenkins.metadata[0].name
+  }
 
+  data = { JENKINS_OAUTH_USER_INFO_URI = base64encode("https://${var.cognito_uri}/oauth2/userInfo"),
+    JENKINS_OAUTH_AUTHORIZATION_URI = base64encode("https://${var.cognito_uri}/oauth2/authorize"),
+    JENKINS_OAUTH_TOKEN_URI         = base64encode("https://${var.cognito_uri}/oauth2/token"),
+    JENKINS_OAUTH_CLIENT_ID         = base64encode(kubernetes_namespace.jenkins.metadata[0].name),
+    JENKINS_OAUTH_CLIENT_SECRET     = base64encode(var.client_secret),
+  }
+
+  type = "Opaque"
 }
 
 
+
 resource "kubernetes_manifest" "jenkins_argocd_application" {
+  depends_on = [kubernetes_secret.jenkins_auth]
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
