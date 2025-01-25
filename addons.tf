@@ -25,11 +25,21 @@ module "eks_blueprints_addons" {
         delete = "10m"
       }
     }
+    eks-pod-identity-agent = {
+      before_compute = true
+      most_recent    = true
+    }
     vpc-cni = {
       most_recent = true
-    }
+      before_compute = true
+      configuration_values = jsonencode({
+        env = {
+          ENABLE_SUBNET_DISCOVERY = "true"
+        }
+      })}
 
-    kube-proxy = {}
+    kube-proxy = {
+    }
     eks-pod-identity-agent = {
       resolve_conflicts = "OVERWRITE"
       most_recent       = true
