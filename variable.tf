@@ -35,9 +35,6 @@ variable "allowed_ips" {
   type      = list(string)
   sensitive = true
 }
-variable "users" {
-  type = map(object({ email = string }))
-}
 
 variable "bucket" {
   type = string
