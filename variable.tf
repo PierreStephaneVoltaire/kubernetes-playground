@@ -58,3 +58,9 @@ variable "vault_version" {
 variable "jenkins_git_values" {
   type = string
 }
+variable "bucket" {
+  type = string
+}
+variable "network_key" {
+  type = string
+}

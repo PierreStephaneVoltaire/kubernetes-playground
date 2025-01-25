@@ -3,7 +3,7 @@
 resource "aws_security_group" "cluster_sg" {
   name        = "allow_all"
   description = "Allow traffic to eks cluster"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
 }
 
 
