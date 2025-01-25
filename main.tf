@@ -25,8 +25,8 @@ module "cost_management" {
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
-    bucket         = var.bucket
-    key            = var.network_key
-    region         = data.aws_region.current.name
+    bucket = var.bucket
+    key    = var.network_key
+    region = data.aws_region.current.name
   }
 }

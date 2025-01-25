@@ -12,21 +12,6 @@ variable "domain_name" {
 variable "cluster_service_ipv4_cidr" {
   type = string
 }
-variable "vpc_public_subnet_cidr" {
-  type    = list(string)
-  default = []
-}
-variable "vpc_private_subnet_cidr" {
-  type    = list(string)
-  default = []
-}
-variable "vpc_azs" {
-  type    = list(string)
-  default = []
-}
-variable "vpc_cdr" {
-  type = string
-}
 
 variable "cluster_version" {
   type = string
@@ -36,13 +21,13 @@ variable "contact" {
 }
 variable "eks_managed_node_groups" {
   type = map(object({
-    disk_size     = number
-    capacity_type = optional(string)
-    min_size      = number
-    max_size      = number
-    desired_size  = number
-    spot_price = optional(number)
-    instance_types  = optional(list(string))
+    disk_size      = number
+    capacity_type  = optional(string)
+    min_size       = number
+    max_size       = number
+    desired_size   = number
+    spot_price     = optional(number)
+    instance_types = optional(list(string))
   }))
 }
 
@@ -54,12 +39,6 @@ variable "users" {
   type = map(object({ email = string }))
 }
 
-variable "vault_version" {
-  type = string
-}
-variable "jenkins_git_values" {
-  type = string
-}
 variable "bucket" {
   type = string
 }

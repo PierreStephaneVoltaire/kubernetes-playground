@@ -3,8 +3,8 @@ data "aws_route53_zone" "main" {
   name = var.domain_name
 }
 module "eks_blueprints_addons" {
-  source  = "aws-ia/eks-blueprints-addons/aws"
-  version = "~> 1.0"
+  source            = "aws-ia/eks-blueprints-addons/aws"
+  version           = "~> 1.0"
   cluster_name      = module.eks.cluster_name
   cluster_endpoint  = module.eks.cluster_endpoint
   cluster_version   = module.eks.cluster_version
@@ -30,13 +30,13 @@ module "eks_blueprints_addons" {
       most_recent    = true
     }
     vpc-cni = {
-      most_recent = true
+      most_recent    = true
       before_compute = true
       configuration_values = jsonencode({
         env = {
           ENABLE_SUBNET_DISCOVERY = "true"
         }
-      })}
+    }) }
 
     kube-proxy = {
     }
@@ -55,8 +55,8 @@ module "eks_blueprints_addons" {
       value = "false"
     }]
   }
-  enable_metrics_server                        = true
-  enable_external_dns                          = true
+  enable_metrics_server = true
+  enable_external_dns   = true
 }
 
 resource "kubernetes_storage_class" "gp3" {
