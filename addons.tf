@@ -44,27 +44,11 @@ module "eks_blueprints_addons" {
     }
 
   }
-  enable_aws_gateway_api_controller = true
 
-  enable_karpenter                           = true
-  karpenter_enable_instance_profile_creation = true
-  karpenter = {
-    repository_username = data.aws_ecrpublic_authorization_token.token.user_name
-    repository_password = data.aws_ecrpublic_authorization_token.token.password
-  }
-  aws_gateway_api_controller = {
-    repository_username = data.aws_ecrpublic_authorization_token.token.user_name
-    repository_password = data.aws_ecrpublic_authorization_token.token.password
-    set = [{
-      name  = "clusterVpcId"
-      value = module.vpc.vpc_id
-    }]
-  }
   enable_cluster_autoscaler           = true
   enable_argocd                       = true
   enable_argo_rollouts                = true
   enable_argo_events                  = true
-  enable_argo_workflows               = true
   enable_aws_load_balancer_controller = true
   aws_load_balancer_controller = {
     set = [{

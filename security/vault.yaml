@@ -17,11 +17,11 @@ server:
     annotations:
       kubernetes.io/ingress.class: "alb"
       alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/subnets: '${public_subnets_string}'
       alb.ingress.kubernetes.io/healthcheck-path: /v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204
-      alb.ingress.kubernetes.io/success-codes: '204'
+      alb.ingress.kubernetes.io/success-codes: '204,200'
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
       alb.ingress.kubernetes.io/certificate-arn: '${alb_cert_arn}'
   readinessProbe:
