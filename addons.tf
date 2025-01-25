@@ -47,16 +47,6 @@ module "eks_blueprints_addons" {
   }
   enable_metrics_server                        = true
   enable_external_dns                          = true
-  enable_external_secrets                      = true
-  enable_aws_privateca_issuer                  = true
-  enable_aws_efs_csi_driver                    = true
-  enable_secrets_store_csi_driver              = true
-  enable_secrets_store_csi_driver_provider_aws = true
-  enable_cert_manager                          = true
-  cert_manager = {
-    wait = true
-  }
-  cert_manager_route53_hosted_zone_arns = [data.aws_route53_zone.main.arn]
 }
 
 resource "kubernetes_storage_class" "gp3" {

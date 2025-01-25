@@ -42,6 +42,7 @@ variable "eks_managed_node_groups" {
     max_size      = number
     desired_size  = number
     spot_price = optional(number)
+    instance_types  = optional(list(string))
   }))
 }
 

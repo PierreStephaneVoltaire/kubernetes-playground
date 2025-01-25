@@ -4,18 +4,10 @@ module "eks" {
   cluster_name                             = "${var.app_name}-cluster"
   cluster_version                          = var.cluster_version
   cluster_enabled_log_types                = []
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose"]
-  }
   cluster_endpoint_public_access_cidrs     = var.allowed_ips
   node_iam_role_additional_policies        = { AmazonEBSCSIDriverPolicy = data.aws_iam_policy.AmazonEBSCSIDriverPolicy.arn, AmazonEKSLoadBalancingPolicy = data.aws_iam_policy.AmazonEKSLoadBalancingPolicy.arn, AmazonEKSCNIPolicy = data.aws_iam_policy.AmazonEKSCNIPolicy.arn, AmazonEKSWorkerNodePolicy = data.aws_iam_policy.AmazonEKSWorkerNodePolicy.arn, AmazonSSMManagedInstanceCore = data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn, }
   iam_role_additional_policies             = { AmazonEKSServiceRolePolicy = data.aws_iam_policy.AmazonEKSClusterPolicy.arn, AmazonEKSServicePolicy = data.aws_iam_policy.AmazonEKSServicePolicy.arn, AmazonEKSVPCResourceController = data.aws_iam_policy.AmazonEKSVPCResourceController.arn }
   cluster_endpoint_public_access           = true
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose"]
-  }
   enable_irsa                              = true
   cluster_service_ipv4_cidr                = var.cluster_service_ipv4_cidr
   enable_cluster_creator_admin_permissions = true
