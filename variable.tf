@@ -37,10 +37,12 @@ variable "contact" {
 variable "eks_managed_node_groups" {
   type = map(object({
     disk_size     = number
-    capacity_type = string
+    capacity_type = optional(string)
     min_size      = number
     max_size      = number
     desired_size  = number
+    spot_price = optional(number)
+    instance_types  = optional(list(string))
   }))
 }
 
@@ -48,9 +50,19 @@ variable "allowed_ips" {
   type      = list(string)
   sensitive = true
 }
-variable "argo_users" {
+variable "users" {
   type = map(object({ email = string }))
 }
+
 variable "vault_version" {
+  type = string
+}
+variable "jenkins_git_values" {
+  type = string
+}
+variable "bucket" {
+  type = string
+}
+variable "network_key" {
   type = string
 }
