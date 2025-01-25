@@ -20,6 +20,7 @@ data "aws_lbs" "argo" {
   }
 }
 data "aws_lb" "argo" {
+  depends_on = [module.eks_blueprints_addons.argocd]
   arn = one(data.aws_lbs.argo.arns)
 }
 resource "aws_route53_record" "argocd_alb" {
