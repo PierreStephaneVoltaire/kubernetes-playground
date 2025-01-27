@@ -1,6 +1,6 @@
 module "eks" {
   source                                   = "terraform-aws-modules/eks/aws"
-  version                                  = "~> 20.26"
+  version                                  = "~> 20.33.1"
   cluster_name                             = "${var.app_name}-cluster"
   cluster_version                          = var.cluster_version
   cluster_enabled_log_types                = []

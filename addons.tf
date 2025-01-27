@@ -78,4 +78,9 @@ resource "kubernetes_storage_class" "gp3" {
   }
   storage_provisioner = "ebs.csi.aws.com"
 }
-
+output "caData" {
+  value = module.eks.cluster_certificate_authority_data
+}
+output "bearer" {
+  value = module.eks.
+}
