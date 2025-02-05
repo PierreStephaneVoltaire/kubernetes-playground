@@ -30,11 +30,15 @@ module "eks_blueprints_addons" {
       most_recent    = true
     }
     vpc-cni = {
-      most_recent    = true
-      before_compute = true
+      most_recent       = true
+      before_compute    = true
+      resolve_conflicts = "OVERWRITE"
       configuration_values = jsonencode({
         env = {
-          ENABLE_SUBNET_DISCOVERY = "true"
+          ENABLE_PREFIX_DELEGATION = "true"
+          WARM_PREFIX_TARGET       = "1"
+          ENABLE_SUBNET_DISCOVERY  = "true"
+
         }
     }) }
 
@@ -80,7 +84,4 @@ resource "kubernetes_storage_class" "gp3" {
 }
 output "caData" {
   value = module.eks.cluster_certificate_authority_data
-}
-output "bearer" {
-  value = module.eks.
 }

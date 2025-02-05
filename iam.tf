@@ -34,3 +34,49 @@ data "aws_iam_policy" "AmazonEKSClusterPolicy" {
 data "aws_iam_policy" "AmazonEKSVPCResourceController" {
   name = "AmazonEKSVPCResourceController"
 }
+resource "aws_iam_role" "karpenter_role" {
+  name = "karpenter-controller-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "eks.amazonaws.com"
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_policy" "karpenter_policy" {
+  name        = "karpenter-policy"
+  description = "Policy for Karpenter to manage nodes"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:RunInstances",
+          "ec2:CreateTags",
+          "ec2:TerminateInstances",
+          "ec2:DescribeInstances",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeLaunchTemplates",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeVpcs",
+          "ec2:GetInstanceTypesFromInstanceRequirements"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "karpenter_attach" {
+  policy_arn = aws_iam_policy.karpenter_policy.arn
+  role       = aws_iam_role.karpenter_role.name
+}
