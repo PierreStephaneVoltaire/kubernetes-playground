@@ -15,6 +15,19 @@ module "eks" {
   subnet_ids                               = data.terraform_remote_state.network.outputs.private_subnets
   control_plane_subnet_ids                 = data.terraform_remote_state.network.outputs.public_subnets
   authentication_mode                      = "API_AND_CONFIG_MAP"
+  cluster_addons = {
+    vpc-cni = {
+      most_recent       = true
+      before_compute    = true
+      resolve_conflicts_on_update = "PRESERVE"
+      service_account_role_arn = module.irsa-vpc-cni.iam_role_arn
+      configuration_values = jsonencode({ env={
+      ENABLE_PREFIX_DELEGATION           = "true"
+        AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG = "true"
+        ENI_CONFIG_LABEL_DEF = "topology.kubernetes.io/zone"
+        WARM_PREFIX_TARGET = "1"}})
+    }
+}
   eks_managed_node_group_defaults = {
     instance_types                 = ["m6a.large"]
     disk_size                      = 50
