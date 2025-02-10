@@ -12,7 +12,11 @@ terraform {
   }
   required_version = ">= 1.3.0"
 }
-
+locals {
+  l = length(data.terraform_remote_state.network.outputs.private_subnets)
+  primary = slice(data.terraform_remote_state.network.outputs.private_subnets, 0, (local.l/2))
+  secondary = slice(data.terraform_remote_state.network.outputs.private_subnets, (local.l/2), local.l)
+}
 data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 module "cost_management" {

@@ -18,74 +18,30 @@ module "eks_blueprints_addons" {
       most_recent              = true
       service_account_role_arn = module.irsa-ebs-csi.iam_role_arn
     }
-
-    coredns = {
-      most_recent = true
-
-      timeouts = {
-        create = "25m"
-        delete = "10m"
-      }
-    }
-
-
-
-    kube-proxy = {
-    }
     eks-pod-identity-agent = {
       resolve_conflicts = "OVERWRITE"
-      before_compute = true
-      most_recent    = true
+      most_recent       = true
     }
 
   }
-
-  # enable_karpenter                           = true
-  # karpenter_enable_instance_profile_creation = true
-  # karpenter = {
-  #   repository_username = data.aws_ecrpublic_authorization_token.token.user_name
-  #   repository_password = data.aws_ecrpublic_authorization_token.token.password
-  # }
-  helm_releases = {
-    prometheus-adapter = {
-      description      = "A Helm chart for k8s prometheus adapter"
-      namespace        = "prometheus-adapter"
-      create_namespace = true
-      chart            = "prometheus-adapter"
-      chart_version    = "4.2.0"
-      repository       = "https://prometheus-community.github.io/helm-charts"
-      values = [
-        <<-EOT
-          replicas: 2
-          podDisruptionBudget:
-            enabled: true
-        EOT
-      ]
-    }
-  }
-  enable_kube_prometheus_stack                 = true
   enable_aws_load_balancer_controller = true
   aws_load_balancer_controller = {
-    set = [{
-      name  = "enableServiceMutatorWebhook"
-      value = "false"
-    }]
+    set = [
+      {
+        name  = "enableServiceMutatorWebhook"
+        value = "false"
+      }
+    ]
   }
-  enable_metrics_server = true
+  enable_metrics_server     = true
   enable_cluster_autoscaler = true
   enable_aws_cloudwatch_metrics                = true
-  enable_aws_efs_csi_driver                    = true
-  enable_aws_privateca_issuer                  = true
-  enable_secrets_store_csi_driver              = true
-  enable_secrets_store_csi_driver_provider_aws = true
-  enable_external_dns = true
-  enable_external_secrets = true
-depends_on = [kubectl_manifest.eni_configs]
+  depends_on = [kubectl_manifest.eni_configs, module.eks]
 
 }
 
 resource "kubernetes_storage_class" "gp3" {
-  depends_on             = [module.eks_blueprints_addons.eks_addons]
+  depends_on = [module.eks_blueprints_addons.eks_addons]
   volume_binding_mode    = "WaitForFirstConsumer"
   reclaim_policy         = "Delete"
   allow_volume_expansion = true
@@ -106,8 +62,9 @@ resource "kubernetes_storage_class" "gp3" {
 output "caData" {
   value = module.eks.cluster_certificate_authority_data
 }
+
 resource "kubectl_manifest" "eni_configs" {
-  count = length(data.terraform_remote_state.network.outputs.private_subnets)
+  count = length(local.secondary)
 
   yaml_body = <<-YAML
   apiVersion: crd.k8s.amazonaws.com/v1alpha1
@@ -117,6 +74,6 @@ resource "kubectl_manifest" "eni_configs" {
   spec:
     securityGroups:
       - ${module.eks.cluster_primary_security_group_id}
-    subnet: ${element(data.terraform_remote_state.network.outputs.private_subnets, count.index)}
+    subnet: ${element(local.secondary, count.index)}
   YAML
 }

@@ -12,20 +12,45 @@ module "eks" {
   cluster_service_ipv4_cidr                = var.cluster_service_ipv4_cidr
   enable_cluster_creator_admin_permissions = true
   vpc_id                                   = data.terraform_remote_state.network.outputs.vpc_id
-  subnet_ids                               = data.terraform_remote_state.network.outputs.private_subnets
+  subnet_ids                               = local.primary
   control_plane_subnet_ids                 = data.terraform_remote_state.network.outputs.public_subnets
   authentication_mode                      = "API_AND_CONFIG_MAP"
+  cluster_upgrade_policy = {
+    support_type = "STANDARD"
+  }
+
+  cluster_zonal_shift_config = {
+    enabled = true
+  }
+  dataplane_wait_duration = "100s"
   cluster_addons = {
     vpc-cni = {
       most_recent       = true
       before_compute    = true
-      resolve_conflicts_on_update = "PRESERVE"
+      resolve_conflicts_on_update = "OVERWRITE"
       service_account_role_arn = module.irsa-vpc-cni.iam_role_arn
-      configuration_values = jsonencode({ env={
-      ENABLE_PREFIX_DELEGATION           = "true"
+      configuration_values = jsonencode({env={
+        # Reference https://aws.github.io/aws-eks-best-practices/reliability/docs/networkmanagement/#cni-custom-networking
         AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG = "true"
-        ENI_CONFIG_LABEL_DEF = "topology.kubernetes.io/zone"
-        WARM_PREFIX_TARGET = "1"}})
+        ENI_CONFIG_LABEL_DEF               = "topology.kubernetes.io/zone"
+        WARM_IP_TARGET ="5"
+        MINIMUM_IP_TARGET="2"
+        # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
+        ENABLE_PREFIX_DELEGATION = "true"
+        WARM_PREFIX_TARGET       = "1"
+      }}
+      )
+    }
+    coredns = {
+      most_recent = true
+      before_compute    = false
+
+    }
+    eks-node-monitoring-agent = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
     }
 }
   eks_managed_node_group_defaults = {

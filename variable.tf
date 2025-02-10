@@ -21,6 +21,9 @@ variable "contact" {
 }
 variable "eks_managed_node_groups" {
   type = map(object({
+    ebs_optimized           = bool
+    enable_monitoring       = bool
+    node_repair_config =object({enabled:bool})
     disk_size      = number
     capacity_type  = optional(string)
     min_size       = number
