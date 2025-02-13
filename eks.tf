@@ -5,6 +5,7 @@ module "eks" {
   cluster_version                          = var.cluster_version
   cluster_enabled_log_types                = []
   cluster_endpoint_public_access_cidrs     = var.allowed_ips
+  cloudwatch_log_group_retention_in_days = 1
   node_iam_role_additional_policies        = { AmazonEBSCSIDriverPolicy = data.aws_iam_policy.AmazonEBSCSIDriverPolicy.arn, AmazonEKSLoadBalancingPolicy = data.aws_iam_policy.AmazonEKSLoadBalancingPolicy.arn, AmazonEKSCNIPolicy = data.aws_iam_policy.AmazonEKSCNIPolicy.arn, AmazonEKSWorkerNodePolicy = data.aws_iam_policy.AmazonEKSWorkerNodePolicy.arn, AmazonSSMManagedInstanceCore = data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn, }
   iam_role_additional_policies             = { AmazonEKSServiceRolePolicy = data.aws_iam_policy.AmazonEKSClusterPolicy.arn, AmazonEKSServicePolicy = data.aws_iam_policy.AmazonEKSServicePolicy.arn, AmazonEKSVPCResourceController = data.aws_iam_policy.AmazonEKSVPCResourceController.arn }
   cluster_endpoint_public_access           = true

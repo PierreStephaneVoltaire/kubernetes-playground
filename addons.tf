@@ -35,7 +35,6 @@ module "eks_blueprints_addons" {
   }
   enable_metrics_server     = true
   enable_cluster_autoscaler = true
-  enable_aws_cloudwatch_metrics                = true
   depends_on = [kubectl_manifest.eni_configs, module.eks]
 
 }
