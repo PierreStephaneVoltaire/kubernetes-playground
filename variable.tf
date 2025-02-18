@@ -28,6 +28,12 @@ variable "eks_managed_node_groups" {
     capacity_type  = optional(string)
     min_size       = number
     max_size       = number
+    labels=optional(map(string))
+    taints=list(object({
+      key    = string
+      value  = string
+      effect = string
+    }))
     desired_size   = number
     spot_price     = optional(number)
     instance_types = optional(list(string))
